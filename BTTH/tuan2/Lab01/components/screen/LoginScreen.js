@@ -52,6 +52,7 @@ const LoginScreen = ({ navigation }) => {
               styles.pt5,
               styles.textLink,
             ]}
+            onPress={() => navigation.navigate("Forget")}
           >
             For got your password?
           </Text>
