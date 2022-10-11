@@ -2,8 +2,10 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 const Item = (props) => {
+  const id = props.id;
   return (
     <TouchableOpacity
+      onPress={props.onPress}
       style={[
         // styles.textCenter,
         {

@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
+  Alert,
   FlatList,
   StyleSheet,
   Text,
@@ -8,17 +9,36 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Item from "./conponents/Item";
+import Item from "./conponents/Item.js";
 
 export default function App() {
   const [list, setList] = useState([]);
   const [item, setItem] = useState("");
+
+  const refInput = useRef();
 
   const submitItemHandle = () => {
     if (item) {
       setList((list) => [...list, item]);
       setItem("");
     }
+  };
+  const editItemFromListHandle = (id) => {
+    setItem(list[id]);
+    refInput.current.focus();
+  };
+  const removeItemFromListHandle = (id) => {
+    const newList = list.filter((item) => item !== id);
+    setList(newList);
+  };
+  const alertHandler = (item, id) => {
+    Alert.alert("Alert Title", "My Alert Msg", [
+      {
+        text: "Delete",
+        onPress: () => removeItemFromListHandle(item),
+      },
+      { text: "Edit", onPress: () => editItemFromListHandle(id) },
+    ]);
   };
   return (
     <View style={styles.container}>
@@ -38,6 +58,7 @@ export default function App() {
         <TextInput
           value={item}
           onChangeText={setItem}
+          ref={refInput}
           style={{
             borderRadius: 30,
             height: 35,
@@ -71,7 +92,14 @@ export default function App() {
           <FlatList
             data={list}
             renderItem={({ item, index }) => {
-              return <Item key={index} id={index} item={item} />;
+              return (
+                <Item
+                  key={index}
+                  id={index}
+                  item={item}
+                  onPress={() => alertHandler(item, index)}
+                />
+              );
             }}
           ></FlatList>
         </View>
